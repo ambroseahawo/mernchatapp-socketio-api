@@ -1,7 +1,7 @@
-import Message from ("../models/Message.js")
+import Message from "../models/Message.js"
 
 // create new messages
-const createMessage = async(req, res) =>{
+export const createMessage = async(req, res) =>{
   const newMessage = new Message(req.body)
 
   try{
