@@ -17,7 +17,8 @@ export const registerNewUser = async(req, res) =>{
 
     // save new user with response
     const user = await newUser.save()
-    res.status(200).json(user)
+    const { password, updatedAt, ...other } = user._doc
+    res.status(200).json(other)
   } catch (error) {
     console.log(error)
     res.status(500).json(error)
