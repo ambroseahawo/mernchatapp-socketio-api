@@ -1,15 +1,15 @@
-const express = require("express")
+import express, { json } from "express"
 const app = express()
-const mongoose = require("mongoose")
-const dotenv = require("dotenv")
-const cors = require("cors")
+import mongoose from "mongoose"
+import { config } from "dotenv"
+import cors from "cors"
 
-const authRoutes =  require("./routes/auth")
+import authRoutes from "./routes/auth.js"
 
-dotenv.config()
+config()
 
 app.use(cors())
-app.use(express.json())
+app.use(json())
 
 app.use("/api/auth", authRoutes)
 
