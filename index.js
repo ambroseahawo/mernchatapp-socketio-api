@@ -5,6 +5,7 @@ import { config } from "dotenv"
 import cors from "cors"
 
 import authRoutes from "./routes/auth.js"
+import usersRoutes from "./routes/users.js"
 
 config()
 
@@ -12,6 +13,7 @@ app.use(cors())
 app.use(json())
 
 app.use("/api/auth", authRoutes)
+app.use("/api/users", usersRoutes)
 
 const PORT = process.env.PORT || 5000
 
