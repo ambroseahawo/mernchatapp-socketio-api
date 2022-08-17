@@ -28,13 +28,21 @@ export const registerNewUser = async (req, res) => {
 // login existing user
 export const loginExistingUser = async (req, res) => {
   try {
+    // find user id in db
     const user = await User.findOne({ email: req.body.email })
-    !user && res.status(404).json("User not found")
+    if (!user){
+      return res.status(404).json("User not found") 
+    }
 
+    // compare login password with user saved password
     const validPassword = await bcrypt.compare(req.body.password, user.password)
-    !validPassword && res.status(400).json("Invalid Password. Please try again!")
+    if (!validPassword){
+      return res.status(400).json("Invalid Password. Please try again!")
+    }
 
-    res.status(200).json(user)
+    // exclude password from response
+    const { password, updatedAt, ...other } = user._doc
+    res.status(200).json(other)
   } catch (error) {
     res.status(500).json(error)
   }
