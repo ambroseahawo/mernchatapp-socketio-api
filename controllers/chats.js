@@ -5,7 +5,7 @@ import User from "../models/User.js"
 // create new chat
 export const newChat = async (req, res) => {
   const newChat = new Chat({
-    members: [req.body.senderId, req.body.receiverId]
+    members: [req.body.memberId, req.body.alsoMemberId]
   })
 
   try {
@@ -23,8 +23,8 @@ export const newChat = async (req, res) => {
       return res.status(404).send(`No user record with id: ${newChat.members[0]}`)
     }
     // is valid user id
-    const sender = await User.findById(newChat.members[0])
-    if (!sender) {
+    const member = await User.findById(newChat.members[0])
+    if (!member) {
       return res.status(404).send(`No user record with id: ${newChat.members[0]}`)
     }
 
@@ -32,8 +32,8 @@ export const newChat = async (req, res) => {
       return res.status(404).send(`No user record with id: ${newChat.members[1]}`)
     }
     // is valid user id
-    const receiver = await User.findById(newChat.members[1])
-    if (!receiver) {
+    const alsoMember = await User.findById(newChat.members[1])
+    if (!alsoMember) {
       return res.status(404).send(`No user record with id: ${newChat.members[1]}`)
     }
 
