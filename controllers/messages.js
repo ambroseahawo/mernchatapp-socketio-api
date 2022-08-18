@@ -28,8 +28,16 @@ export const createMessage = async(req, res) =>{
 // get existing messages
 export const getMessages = async(req, res) =>{
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
+      return res.status(400).send("Invalid User")
+    }
     if (!mongoose.Types.ObjectId.isValid(req.params.chatId)) {
       return res.status(400).send("Invalid Chat")
+    }
+    // validate if the sender is part of the chat
+    const currentChat = await Chat.findById(req.params.chatId)
+    if (!(currentChat.members.includes(String(req.params.userId)))) {
+      return res.status(400).send("Can't view messages on this chat")
     }
     const messages = await Message.find({
       chatId: req.params.chatId
