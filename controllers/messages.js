@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import Message from "../models/Message.js"
+import Chat from "../models/Chat.js"
 
 // create new messages
 export const createMessage = async(req, res) =>{
@@ -11,6 +12,11 @@ export const createMessage = async(req, res) =>{
     }
     if (!mongoose.Types.ObjectId.isValid(req.body.senderId)) {
       return res.status(400).send("Invalid Sender")
+    }
+    // validate if the sender is part of the chat
+    const currentChat = await Chat.findById(req.body.chatId)
+    if (!(currentChat.members.includes(String(req.body.senderId)))){
+      return res.status(400).send("Can't send messages to this chat")
     }
     const savedMessage = await newMessage.save()
     res.status(200).json(savedMessage)
