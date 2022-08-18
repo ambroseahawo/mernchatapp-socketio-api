@@ -18,3 +18,18 @@ export const createMessage = async(req, res) =>{
     res.status(500).json(error.message)
   }
 }
+
+// get existing messages
+export const getMessages = async(req, res) =>{
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.chatId)) {
+      return res.status(400).send("Invalid Chat")
+    }
+    const messages = await Message.find({
+      chatId: req.params.chatId
+    })
+    res.status(200).json(messages)
+  } catch (error) {
+    res.status(500).json(error.message)
+  }
+} 
