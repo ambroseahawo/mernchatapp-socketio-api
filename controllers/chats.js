@@ -30,3 +30,18 @@ export const newChat = async (req, res) => {
     res.status(500).json(error.message)
   }
 }
+
+// get existing chat
+export const getChat = async(req, res) =>{
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
+      return res.status(400).send("Invalid User")
+    }
+    const chat = await Chat.find({
+      members: { $in: [req.params.userId]}
+    })
+    res.status(200).json(chat)
+  } catch (error) {
+    res.status(500).json(error.message)
+  }
+}
