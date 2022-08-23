@@ -4,6 +4,11 @@ import bcrypt from "bcrypt"
 // register user
 export const registerNewUser = async (req, res) => {
   try {
+    // check if user exists already
+    const existingUser = await User.findOne({ email: req.body.email })
+    if(existingUser){
+      return res.status(500).json("Email already registered. Try logging in")
+    }
     // generate new hashed password
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(req.body.password, salt)
