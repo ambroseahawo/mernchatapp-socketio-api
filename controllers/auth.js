@@ -38,9 +38,12 @@ export const registerNewUser = async (req, res) => {
 export const loginExistingUser = async (req, res) => {
   try {
     // find user id in db
-    const user = await User.findOne({ email: req.body.email })
+    let user = await User.findOne({ email: req.body.username })
     if (!user){
-      return res.status(404).json(`No user record with email: ${req.body.email}`) 
+      user = await User.findOne({ username: req.body.username })
+      if(!user){
+        return res.status(404).json(`No user record registered with: ${req.body.username}`) 
+      }
     }
 
     // compare login password with user saved password
