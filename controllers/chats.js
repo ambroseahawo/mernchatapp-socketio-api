@@ -55,10 +55,40 @@ export const getChat = async(req, res) =>{
     if (!user) {
       return res.status(404).send(`No user record with id: ${req.params.userId}`)
     }
-    const chat = await Chat.find({
+    const chats = await Chat.find({
       members: { $in: [req.params.userId]}
     })
-    res.status(200).json(chat)
+
+    let chatUserIds = []
+    chats.forEach(async (chat) =>{
+      const friendId = chat.members.find((userId) => userId !== req.params.userId)
+      console.log(friendId)
+      chatUserIds.push(friendId)
+      // const chatUser = await User.find({
+      //   _id: { $in: [friendId] }
+      // })
+      // delete chatUser.password
+      // chatUsers.push(chatUser)
+
+      // const { password, updatedAt, ...other } = chatUser[0]._doc
+
+      // chatUserIds.push(other)
+    })
+
+    const chatUsers = await User.find({
+      _id: { $in: [...chatUserIds] }
+    })
+    
+    const filteredChatUsers = chatUsers.map((userData) => {
+      const { password, updatedAt, ...other } = userData._doc
+      userData.password = ''
+      delete userData.password
+      return other 
+    })
+
+    console.log(filteredChatUsers);
+    
+    res.status(200).json(filteredChatUsers)
   } catch (error) {
     res.status(500).json(error.message)
   }
