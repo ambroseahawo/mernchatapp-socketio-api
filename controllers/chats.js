@@ -62,7 +62,6 @@ export const getChat = async(req, res) =>{
     let chatUserIds = []
     chats.forEach(async (chat) =>{
       const friendId = chat.members.find((userId) => userId !== req.params.userId)
-      console.log(friendId)
       chatUserIds.push(friendId)
       // const chatUser = await User.find({
       //   _id: { $in: [friendId] }
@@ -85,8 +84,6 @@ export const getChat = async(req, res) =>{
       delete userData.password
       return other 
     })
-
-    console.log(filteredChatUsers);
     
     res.status(200).json(filteredChatUsers)
   } catch (error) {
