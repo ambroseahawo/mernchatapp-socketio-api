@@ -1,0 +1,36 @@
+import mongoose from "mongoose";
+import User from "../models/User.js";
+import Chat from "../models/Chat.js";
+import CurrentChat from "../models/CurrentChat.js";
+
+export const postCurrentChat = async (req, res) => {
+  const userId = req.body.userId
+  const chatId = req.body.chatId
+
+  try {
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(404).send(`No user record with id: ${userId}`)
+    }
+    const user = await User.findById(userId)
+    // is valid user id
+    if (!user) {
+      return res.status(404).send(`No user record with id: ${userId}`)
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(chatId)) {
+      return res.status(404).send(`No chat record with id: ${chatId}`)
+    }
+    const chat = await Chat.findById(chatId)
+    // is valid chatId
+    if (!chat) {
+      return res.status(404).send(`No chat record with id: ${chatId}`)
+    }
+
+    const newCurrentChat = new CurrentChat({ userId, chatId })
+    await newCurrentChat.save()
+
+    res.status(200).json("Current chat saved successfully")
+  } catch (error) {
+    res.status(500).json(error.message)
+  }
+}
