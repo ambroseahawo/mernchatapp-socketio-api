@@ -85,7 +85,7 @@ export const updateCurrentChat = async (req, res) => {
       userId: { $in: userId }
     })
 
-    await currentChat.updateOne({ $set: { currentChatId: chatId } });
+    await currentChat[0].updateOne({ $set: { chatId } });
 
     res.status(200).json("Current chat Id updated successfully");
   } catch (error) {

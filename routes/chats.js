@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.get("/users", getChatUsers)
 router.post("/current", postCurrentChat)
-router.get("/current", getCurrentChat)
+router.get("/current/:userId", getCurrentChat)
 router.put("/current", updateCurrentChat)
 router.get("/:userId", getChat)
 router.post("/", newChat)

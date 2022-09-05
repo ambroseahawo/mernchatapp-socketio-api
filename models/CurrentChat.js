@@ -12,5 +12,5 @@ const CurrentChatSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const CurrentChat = mongoose.model("Chat", CurrentChatSchema);
+const CurrentChat = mongoose.model("CurrentChat", CurrentChatSchema);
 export default CurrentChat
