@@ -37,6 +37,30 @@ export const postCurrentChat = async (req, res) => {
 
 export const getCurrentChat = async (req, res) => {
   const userId = req.params.userId
+  
+  try {
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(404).send(`No user record with id: ${userId}`)
+    }
+    const user = await User.findById(userId)
+    // is valid user id
+    if (!user) {
+      return res.status(404).send(`No user record with id: ${userId}`)
+    }
+    
+    const currentChat = await CurrentChat.find({
+      userId: { $in: userId }
+    })
+
+    res.status(200).json(currentChat)
+  } catch (error) {
+    res.status(500).json(error.message)
+  }
+}
+
+export const updateCurrentChat = async (req, res) => {
+  const userId = req.body.userId
+  const chatId = req.body.chatId
 
   try {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -48,11 +72,22 @@ export const getCurrentChat = async (req, res) => {
       return res.status(404).send(`No user record with id: ${userId}`)
     }
 
+    if (!mongoose.Types.ObjectId.isValid(chatId)) {
+      return res.status(404).send(`No chat record with id: ${chatId}`)
+    }
+    const chat = await Chat.findById(chatId)
+    // is valid chatId
+    if (!chat) {
+      return res.status(404).send(`No chat record with id: ${chatId}`)
+    }
+
     const currentChat = await CurrentChat.find({
       userId: { $in: userId }
     })
 
-    res.status(200).json(currentChat)
+    await currentChat.updateOne({ $set: { currentChatId: chatId } });
+
+    res.status(200).json("Current chat Id updated successfully");
   } catch (error) {
     res.status(500).json(error.message)
   }
