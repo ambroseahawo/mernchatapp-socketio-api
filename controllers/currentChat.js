@@ -56,7 +56,9 @@ export const getCurrentChat = async (req, res) => {
     const friendData = await User.findById(friendId)
 
     const { password, updatedAt, ...other } = friendData._doc
-    res.status(200).json(other)
+    const currentChatResponse = { ...other, currentChatId: currentChatData._id}
+    
+    res.status(200).json(currentChatResponse)
   } catch (error) {
     res.status(500).json(error.message)
   }
